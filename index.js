@@ -7,6 +7,8 @@ module.exports = function (obj, opts) {
     if (typeof space === 'number') space = Array(space+1).join(' ');
     var cycles = (typeof opts.cycles === 'boolean') ? opts.cycles : false;
     var replacer = opts.replacer || function(key, value) { return value; };
+    var allKeys = (typeof opts.allKeys === 'boolean') ? opts.allKeys : false;
+    var objKeys = allKeys ? allObjectKeys : objectKeys;
 
     var cmp = opts.cmp && (function (f) {
         return function (node) {
@@ -50,7 +52,7 @@ module.exports = function (obj, opts) {
             }
             else seen.push(node);
 
-            var keys = objectKeys(node).sort(cmp && cmp(node));
+            var keys = objKeys(node).sort(cmp && cmp(node));
             var out = [];
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
@@ -79,6 +81,14 @@ var objectKeys = Object.keys || function (obj) {
     var keys = [];
     for (var key in obj) {
         if (has.call(obj, key)) keys.push(key);
+    }
+    return keys;
+};
+
+var allObjectKeys = function (obj) {
+    var keys = [];
+    for (var key in obj) {
+        keys.push(key);
     }
     return keys;
 };
